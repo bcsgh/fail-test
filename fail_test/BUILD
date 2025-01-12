@@ -1,3 +1,5 @@
+exports_files(["fail_test.bzl"])
+
 load("@rules_python//python:py_binary.bzl", "py_binary")
 
 py_binary(

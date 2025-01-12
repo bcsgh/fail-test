@@ -25,6 +25,40 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
+"""
+# A Bazel rule for testing that other Bazel test rules fail when the should.
+
+## `MODULE.bazel`
+
+```
+bazel_dep(
+    name = "com_github_bcsgh_fail_test",
+    version = ...,
+)
+```
+
+## Usage
+
+```
+load("@com_github_bcsgh_fail_test//fail_test:fail_test.bzl", "fail_test")
+
+sh_test(
+    name = "fail_test",
+    srcs = ["fail.sh"],
+    tags = ["manual"],  # Expected to fail so don't run normaly.
+)
+
+fail_test(
+    name = "test_failing_test",
+    msgs = [
+        "expected",
+        "result",
+    ],
+    test = ":fail_test",
+)
+```
+"""
+
 def _fail_test_impl(ctx):
     rundeps = [ctx.attr.test[DefaultInfo].default_runfiles.files]
     exe = ctx.attr.test[DefaultInfo].files_to_run.executable
