@@ -67,22 +67,22 @@ def _fail_test_impl(ctx):
     json_data = ctx.actions.declare_file(ctx.label.name + ".json")
     runfiles += [json_data]
     ctx.actions.write(
-        output=json_data,
-        content=json.encode(struct(
-            msgs=ctx.attr.msgs,
+        output = json_data,
+        content = json.encode(struct(
+            msgs = ctx.attr.msgs,
         )),
     )
 
     log = ctx.label.name + ".log"
     executable = ctx.actions.declare_file(ctx.label.name + ".sh")
     rundeps += [
-      ctx.attr._tool[DefaultInfo].data_runfiles.files,
-      ctx.attr._tool[DefaultInfo].default_runfiles.files,
-      ctx.attr._tool[DefaultInfo].files,
+        ctx.attr._tool[DefaultInfo].data_runfiles.files,
+        ctx.attr._tool[DefaultInfo].default_runfiles.files,
+        ctx.attr._tool[DefaultInfo].files,
     ]
     ctx.actions.write(
-        output=executable,
-        content="\n".join([
+        output = executable,
+        content = "\n".join([
             # Run the command, capture all output and invert success.
             # This dumps the output log if the tests "passes" for debugging.
             "(%s &> %s) && ( echo Test did not fail. ; cat %s ) && exit 2" % (exe.short_path, log, log),
@@ -98,30 +98,30 @@ def _fail_test_impl(ctx):
     )
 
     return [DefaultInfo(
-        executable=executable,
-        runfiles=ctx.runfiles(
+        executable = executable,
+        runfiles = ctx.runfiles(
             files = runfiles,
-            transitive_files = depset(runfiles, transitive=rundeps),
+            transitive_files = depset(runfiles, transitive = rundeps),
         ),
     )]
 
 fail_test = rule(
     doc = "Check that a test rule fails with the expected results.",
-
+    #
     implementation = _fail_test_impl,
     test = True,
     attrs = {
         "test": attr.label(
-            doc="The test target being checked.",
-            allow_files=True,
-            mandatory=True,
+            doc = "The test target being checked.",
+            allow_files = True,
+            mandatory = True,
         ),
         "msgs": attr.string_list(
-            doc="A set of string to check the test output for.",
+            doc = "A set of string to check the test output for.",
         ),
         "_tool": attr.label(
-            doc="The test tool.",
-            default=":fail_test_py",
+            doc = "The test tool.",
+            default = ":fail_test_py",
         ),
     },
 )

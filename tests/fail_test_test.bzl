@@ -25,9 +25,11 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
+load("@rules_shell//shell:sh_test.bzl", "sh_test")
 load("//fail_test:fail_test.bzl", "fail_test")
+
 def fail_test_suite(name):
-    native.sh_test(
+    sh_test(
         name = "fail_test_fail_test",
         srcs = ["fail.sh"],
         tags = ["manual"],
@@ -42,7 +44,7 @@ def fail_test_suite(name):
         test = ":fail_test_fail_test",
     )
 
-    native.sh_test(
+    sh_test(
         name = "fail_test_pass_test",
         srcs = ["pass.sh"],
         tags = ["manual"],
